@@ -69,4 +69,3 @@ There is a json file to store the metadata of the datasets. The format to add a 
 ```
 
 
-# AutoMID
