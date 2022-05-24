@@ -1,0 +1,97 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Run Training Page{% endblock %}
+
+{% block body %}
+    <!-- Xterm CSS, for the terminal emulator.-->
+    <link rel="stylesheet" href="https://unpkg.com/xterm@3.6.0/dist/xterm.css"/>
+
+    <span style="font-size: 1.5em;">AutoMID Training Console</span>&nbsp;&nbsp;&nbsp;
+    <span style="font-size: 1em;">status: <span style="font-size: small;" id="status">connecting to terminal...</span></span>
+    <br>
+    <!-- Warning text. -->
+    <strong><b>Please do not exit until training has been completed!</b></strong>
+
+    <!-- The terminal will go here. -->
+    <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
+    <br/>
+
+    <!-- Xterm CSS, for the terminal emulator. -->
+    <script src="https://unpkg.com/xterm@3.6.0/dist/xterm.js"></script>
+    <script src="https://unpkg.com/xterm@3.6.0/dist/addons/fit/fit.js"></script>
+    <script src="https://unpkg.com/xterm@3.6.0/dist/addons/webLinks/webLinks.js"></script>
+    <script src="https://unpkg.com/xterm@3.6.0/dist/addons/fullscreen/fullscreen.js"></script>
+    <script src="https://unpkg.com/xterm@3.6.0/dist/addons/search/search.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+
+    <script>
+        Terminal.applyAddon(fullscreen)
+        Terminal.applyAddon(fit)
+        Terminal.applyAddon(webLinks)
+        Terminal.applyAddon(search)
+        const term = new Terminal({
+            cursorBlink: true,
+            macOptionIsMeta: true,
+        });
+
+        term.open(document.getElementById('terminal'));
+        term.fit()
+        term.resize(15, 50)
+        console.log(`size: ${term.cols} columns, ${term.rows} rows`)
+        term.fit()
+
+        // Capturing key events.
+        term.on('key', (key, ev) => {
+            console.log("pressed key", key)
+            console.log("event", ev)
+            socket.emit("pty-input", {"input": key})
+        });
+
+        const socket = io.connect('/pty');
+        const status = document.getElementById("status")
+
+        // To print pseudotty output to the terminal
+        socket.on("pty-output", function (data) {
+            console.log("New Output", data)
+            term.write(data.output)
+        })
+
+        // When the terminal is successfully connected, the following two commands are run.
+        socket.on("connect", () => {
+                fit_to_screen()
+                status.innerHTML = '<span style="background-color: #00cc66;">Successfully Connected!</span>'
+                socket.emit("pty-input", {"input": "source ./venv/bin/activate\n"})
+                socket.emit("pty-input", {"input": 'python ./static/train_model.py --dataset_dir={{ selected_dataset }} --model_name=\'{{ model_name }}\'\n'})
+            }
+        )
+
+        // When the terminal disconnects form the application.
+        socket.on("disconnect", () => {
+            status.innerHTML = '<span style="background-color: #cc0000;">Terminal Disconnected!</span>'
+        })
+
+        // Function to fit the terminal to the screen.
+        function fit_to_screen() {
+            term.fit()
+            socket.emit("resize", {"cols": term.cols, "rows": term.rows})
+        }
+
+        // Function to manage any timeouts.
+        function manage_timeout(func, wait_ms) {
+            let timeout
+            return function (...args) {
+                const context = this
+                clearTimeout(timeout)
+                timeout = setTimeout(() => func.apply(context, args), wait_ms)
+            }
+        }
+
+        // Waiting time in milliseconds.
+        const wait_ms = 50;
+        // If the window is resized, the manage timeout method will be called.
+        window.onresize = manage_timeout(fit_to_screen, wait_ms)
+
+    </script>
+
+
+{% endblock %}

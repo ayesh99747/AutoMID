@@ -1,0 +1,19 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Welcome Page{% endblock %}
+
+{% block body %}
+    {% if current_user.is_authenticated %}
+        <h1 class="text-center"> Welcome to AutoMID, {{ username }}! </h1>
+    {% endif %}
+    {% if not current_user.is_authenticated %}
+        <h1 class="text-center"> Welcome to AutoMID!</h1>
+        <div class="text-center">
+            <div class="box">
+                <a type="button" class="btn btn-primary" href="/login">Login</a>
+                <a type="button" class="btn btn-primary" href="/signup">Register</a>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Welcome to AutoMID Docs!</h1><br>
+
+    {% if not current_user.is_authenticated %}
+        <h2><strong><u>Signup</u></strong></h2>
+        <ul>
+            <li>If you already have an account, head to <a class="" href="/login">Login</a> to login.</li>
+            <li>To create a new account, you first need to enter a unique username. If the username entered already
+                exists,
+                a message will be displayed to enter a different username.
+            </li>
+            <li>Next you need to enter a strong password for the account.</li>
+            <li>Finally, you need to select which type of account you want to create. A radiologist can create a new
+                model as well as diagnose images whereas a clinician can only diagnose an image. The AI community
+                account will allow you to upload your model and view the leaderboard.
+            </li>
+        </ul>
+        <br>
+        <h2><strong><u>Login</u></strong></h2>
+        <ul>
+            <li>In order to login you first need an account. Head to <a class="" href="/signup">Signup</a> to signup.
+            </li>
+            <li>If you already have an account, you can type the username and password to login.</li>
+        </ul>
+    {% endif %}
+    {% if current_user.is_authenticated %}
+        {% if current_user.user_type=='Radiologist' or current_user.user_type=='Clinician' %}
+            <h2><strong><u>Diagnose</u></strong></h2>
+            <ul>
+                <li>In order to diagnose an image, you first need to select a dataset to use and click next.<b>As shown
+                    in
+                    the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_Diagnose_Dataset Input.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li>Next you need to upload the x-ray image to diagnose.</li>
+                <li>Once the model has been selected and the image has been uploaded, please click the next button.<b>As
+                    shown in
+                    the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_Diagnose_Model and Image Input.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li>Then the diagnosis as well as the probability of that prediction will be displayed along with the
+                    xray image. <b>As shown in the
+                    image below</b>
+                </li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_Diagnose_Output.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+            </ul>
+            <br>
+            <h2><strong><u>View Model Statistics</u></strong></h2>
+            <ul>
+                <li>In order to view the statistics for the model, you need to select the model and click next.<b>As
+                    shown in
+                    the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_View Model Statistics_Input.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li>Then a list of statistics will appear.<b>As shown in
+                    the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_View Model Statistics_Output.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <ul>
+                    <li>Training Accuracy - The accuracy achieved during training.</li>
+                    <li>Validation Accuracy - The accuracy achieved when predicting upon the test dataset.</li>
+                    <li>Total Training Time - Time taken to train the model. (Inclusive of Hyperparameter tuning and
+                        Neural
+                        Architecture Search)
+                    </li>
+                    <li>Model Used - The final model selected during the Neural Architecture Search</li>
+
+                </ul>
+            </ul>
+        {% endif %}
+        <br>
+        {% if current_user.user_type=='Radiologist' %}
+            <h2><strong><u>Create New Model</u></strong></h2>
+            <ul>
+                <li>First the dataset to be used should be selected from the dropdown list.</li>
+                <li>Next, a name for the new model should be entered.<b>As shown in the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_New Model_Input.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li>Finally, the next button should be clicked.</li>
+                <li>Then a window showing a console will be shown, and you can see the model being trained in front of
+                    you.<b>As shown in the image below</b>
+                </li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_New Model_Training.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li> Once the model has been trained the final model statistics will be displayed and you can navigate
+                    to another page.
+                </li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_New Model_Output.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <b>**Don't close the application or window while the model is being trained. If it is closed, the model
+                    will not be trained.</b><br>
+            <b>**Once training has been completed, please follow the steps to upload the model.</b>
+            </ul>
+            <br>
+        {% endif %}
+        {% if current_user.user_type=='Radiologist' or current_user.user_type=='AI Community' %}
+            <h2><strong><u>Upload New Model</u></strong></h2>
+            <ul>
+                <li>First you need to select the model to upload.</li>
+                <li>Then you need to select the dataset used from the dropdown box and click next. <b>As shown in the
+                    image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_Upload New Model_Input.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+                <li>Once the model has been successfully uploaded, you will be able to see the model statistics. <b>As
+                    shown in the image below</b></li>
+                <br>
+                <div>
+                    <img src="{{ url_for('static', filename='screenshots/Screenshot_Upload New Model_Output.png') }}"
+                         alt="screenshot_help"
+                         class="rounded mx-auto d-block border">
+                </div>
+                <br>
+            </ul>
+            <br>
+        {% endif %}
+        <h2><strong><u>View Leaderboard</u></strong></h2>
+        <ul>
+            <li>First you need to select the dataset you wish to see the models for and select next.</li>
+            <li>Then you will be shown a list of models sorted by the accuracy achieved during training. <b>As shown in
+                the image below</b></li>
+            <br>
+            <div>
+                <img src="{{ url_for('static', filename='screenshots/Screenshot_View Leaderboard_Output.png') }}"
+                     alt="screenshot_help"
+                     class="rounded mx-auto d-block border">
+            </div>
+            <br>
+        </ul>
+        <br>
+    {% endif %}
+{% endblock %}

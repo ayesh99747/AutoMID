@@ -1,0 +1,18 @@
+{
+  "dataset1": {
+    "Name": "Dataset_1-Covid19_Normal_Pneumonia",
+    "Labels": [
+      "Covid-19",
+      "Normal",
+      "Pneumonia"
+    ]
+  },
+  "dataset2": {
+    "Name": "Dataset_2-Normal_Bacterial_Viral_Pneumonia",
+    "Labels": [
+      "Bacterial Pneumonia",
+      "Normal",
+      "Viral Pneumonia"
+    ]
+  }
+}

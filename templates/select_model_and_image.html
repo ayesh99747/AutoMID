@@ -1,0 +1,54 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Select Model and Image Page{% endblock %}
+
+{% block body %}
+       {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- This form is used to select the model to use and upload the image to diagnose. -->
+    <form method="POST" action="/select_model" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <fieldset>
+            <div>
+                <label for="select_model" class="form-control-label">Name of the Model</label>
+                <select name="select_model" id="select_model" class="form-control form-control-lg">
+                    {% for subfield in dir_list %}
+                        <option>{{ subfield.model_name }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                {{ form.upload_image.label(class="form-control-label") }}
+                {{ form.upload_image(class="form-control form-control-lg") }}
+            </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+            {{ form.next(class="btn btn-primary") }}
+        </div>
+    </form>
+    <!-- The following line of code is used to display the results of the diagnosis. -->
+    {% if filename %}
+        <div>
+            <h2>
+                The model predicted - {{ prediction_text }}
+
+            </h2>
+
+            <h2>
+                The probability of {{ prediction_text }} is {{ probability }}%
+            </h2>
+        </div>
+        <br>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/'+filename) }}" alt="Xray" width="375" height="450"
+                 class="rounded mx-auto d-block">
+
+        </div>
+    {% endif %}
+{% endblock %}

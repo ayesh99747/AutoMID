@@ -1,0 +1,48 @@
+{% extends "layout_main.html" %}
+
+{% block title %}View Model Statistics{% endblock %}
+
+{% block body %}
+    <!-- The following form is used to view the model statistics. -->
+    <form method="POST" action="/view_model_statistics">
+        {{ form.csrf_token }}
+        <fieldset>
+            <div>
+                <label for="select_model" class="form-control-label">Name of the Model</label>
+                <select name="select_model" id="select_model" class="form-control form-control-lg">
+                    {% for subfield in dir_list %}
+                        <option>{{ subfield.model_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+            {{ form.next(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <br><br>
+    <div>
+        <!-- The following lines will display the statistics for the chosen model. -->
+        {% if train_acc %}
+            <h2 class="text-center">
+                Model Statistics -
+            </h2><br>
+            <h4>
+                Training Accuracy - {{ train_acc }}%
+            </h4>
+            <h4>
+                Validation Accuracy - {{ val_acc }}%
+            </h4>
+            <h4>
+                Total Training Time - {{ total_time }} minutes
+            </h4>
+            <h4>
+                Model Used - {{ model_used }}
+            </h4>
+        {% endif %}
+    </div>
+    <br>
+
+{% endblock %}

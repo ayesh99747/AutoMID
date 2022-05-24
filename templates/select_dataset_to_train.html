@@ -1,0 +1,24 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Select Dataset To Train Page{% endblock %}
+
+{% block body %}
+    <!-- This form is used to select the dataset to train on. -->
+    <form method="POST" action="/select_dataset_to_train">
+        {{ form.csrf_token }}
+        <fieldset>
+            <div>
+                {{ form.select_dataset.label(class="form-control-label") }}
+                {{ form.select_dataset(class="form-control form-control-lg") }}
+                <br>
+                {{ form.model_name.label(class="form-control-label") }}
+                {{ form.model_name(class="form-control form-control-lg") }}
+            </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+            {{ form.next(class="btn btn-primary") }}
+        </div>
+    </form>
+
+{% endblock %}

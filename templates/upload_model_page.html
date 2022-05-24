@@ -1,0 +1,52 @@
+{% extends "layout_main.html" %}
+
+{% block title %}Upload Model Page{% endblock %}
+
+{% block body %}
+     <!-- If there are any  messages, they will be displayed here. -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-success">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- The following form is used to upload a model. -->
+    <form method="POST" action="/upload_model" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <fieldset>
+            <div>
+                {{ form.upload_model.label(class="form-control-label") }}
+                {{ form.upload_model(class="form-control form-control-lg") }}
+                <br>
+                {{ form.dataset_used.label(class="form-control-label") }}
+                {{ form.dataset_used(class="form-control form-control-lg") }}
+            </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+            {{ form.next(class="btn btn-primary") }}
+        </div>
+    </form>
+    <br><br>
+    <div>
+        <!-- The following lines are used to display the model statistics. -->
+        {% if train_acc %}
+            <h2 class="text-center">
+                Model Statistics -
+            </h2><br>
+            <h4>
+                Training Accuracy - {{ train_acc }}%
+            </h4>
+            <h4>
+                Validation Accuracy - {{ val_acc }}%
+            </h4>
+            <h4>
+                Total Training Time - {{ total_time }} minutes
+            </h4>
+            <h4>
+                Model Used - {{ model_used }}
+            </h4>
+        {% endif %}
+    </div>
+{% endblock %}

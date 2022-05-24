@@ -1,0 +1,52 @@
+{% extends "layout_main.html" %}
+
+{% block title %}View Leaderboard Page{% endblock %}
+
+{% block body %}
+    <!-- The following form is used to select the dataset to view the leaderboard. -->
+    <form method="POST" action="/view_leaderboard" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <fieldset>
+            <div>
+                {{ form.select_dataset.label(class="form-control-label") }}
+                {{ form.select_dataset(class="form-control form-control-lg") }}
+            </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+            {{ form.next(class="btn btn-primary") }}
+        </div>
+    </form>
+    <br><br>
+    <div>
+        <!-- The following code displays the table/leaderboard. -->
+        {% if leaderboard %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Model Name</th>
+                    <th scope="col">Dataset Used</th>
+                    <th scope="col">Train Accuracy</th>
+                    <th scope="col">Validation Accuracy</th>
+                    <th scope="col">Total Time Taken</th>
+                    <th scope="col">Model Used</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for subfield in leaderboard %}
+                    <tr>
+                        <td>{{ subfield.username }}</td>
+                        <td>{{ subfield.model_name }}</td>
+                        <td>{{ subfield.dataset_used }}</td>
+                        <td>{{ subfield.train_acc }}%</td>
+                        <td>{{ subfield.val_acc }}%</td>
+                        <td>{{ subfield.total_time }} min</td>
+                        <td>{{ subfield.model_used }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

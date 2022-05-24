@@ -1,0 +1,9 @@
+autogluon==0.4.1
+autogluon.features==0.4.0
+Flask==2.1.1
+Flask_Login==0.6.0
+Flask_SocketIO==5.1.2
+Flask_SQLAlchemy==2.5.1
+Flask_WTF==1.0.1
+Werkzeug==2.1.1
+WTForms==3.0.1
